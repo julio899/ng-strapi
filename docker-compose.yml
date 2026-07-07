@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  strapi:
+    container_name: strapi-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: strapi-app:latest
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+    ports:
+      # Map the host PORT to the container PORT dynamically from the .env file.
+      # If PORT is not set in .env, it defaults to 1337.
+      - "${PORT:-1337}:${PORT:-1337}"
+    volumes:
+      # Map the SQLite database file from the host root to the configured path inside the container.
+      - ./data.db:/opt/app/${DATABASE_FILENAME:-.tmp/data.db}
+      # Map the uploads directory to persist uploaded media.
+      - ./public/uploads:/opt/app/public/uploads
