@@ -1,3 +1,9 @@
+networks:
+  app:
+    name: app
+    driver: bridge
+    external: true
+
 services:
   strapi:
     container_name: strapi-app
