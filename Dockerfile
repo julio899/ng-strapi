@@ -17,16 +17,14 @@ RUN apk update && apk add --no-cache \
 ARG NODE_ENV=production
 ENV NODE_ENV=${NODE_ENV}
 
-WORKDIR /opt/
+WORKDIR /opt/app
 COPY package.json package-lock.json ./
 RUN npm ci
 
-WORKDIR /opt/app
 COPY . .
 RUN npm run build
 
 # Prune development dependencies to keep the image optimized
-WORKDIR /opt/
 RUN npm prune --production
 
 # Stage 2: Production runner stage
@@ -38,10 +36,8 @@ RUN apk update && apk add --no-cache vips-dev
 ARG NODE_ENV=production
 ENV NODE_ENV=${NODE_ENV}
 
-WORKDIR /opt/
-COPY --from=build /opt/node_modules ./node_modules
-
 WORKDIR /opt/app
+COPY --from=build /opt/app/node_modules ./node_modules
 COPY --from=build /opt/app/dist ./dist
 COPY --from=build /opt/app/public ./public
 COPY --from=build /opt/app/package.json ./package.json
@@ -50,9 +46,10 @@ COPY --from=build /opt/app/config ./config
 COPY --from=build /opt/app/src ./src
 
 # Create directory for SQLite db and set ownership to node user
-RUN mkdir -p /opt/app/.tmp && chown -R node:node /opt/app /opt/node_modules
+RUN mkdir -p /opt/app/.tmp && chown -R node:node /opt/app
 
 USER node
 EXPOSE 1337
 
 CMD ["npm", "run", "start"]
+
