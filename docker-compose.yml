@@ -16,10 +16,10 @@ services:
       - .env
     environment:
       - NODE_ENV=production
-    ports:
-      # Map the host PORT to the container PORT dynamically from the .env file.
-      # If PORT is not set in .env, it defaults to 1337.
-      - "${PORT:-1337}:${PORT:-1337}"
+    # ports:
+    #   # Map the host PORT to the container PORT dynamically from the .env file.
+    #   # If PORT is not set in .env, it defaults to 1337.
+    #   - "${PORT:-1337}:${PORT:-1337}"
     volumes:
       # Map the SQLite database file from the host root to the configured path inside the container.
       - ./data.db:/opt/app/${DATABASE_FILENAME:-.tmp/data.db}
