@@ -19,5 +19,5 @@ services:
     environment:
       - NODE_ENV=production
     volumes:
-      - ./data.db:/opt/app/${DATABASE_FILENAME:-.tmp/data.db}
+      - ./.tmp:/opt/app/.tmp
       - ./public/uploads:/opt/app/public/uploads
